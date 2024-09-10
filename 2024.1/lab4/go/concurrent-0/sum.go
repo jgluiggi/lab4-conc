@@ -17,10 +17,9 @@ func readFile(filePath string) ([]byte, error) {
 }
 
 // sum all bytes of a file
-func sum(filePath string) (int, error) {
+func sum(filePath string, c chan int)  {
 	data, err := readFile(filePath)
 	if err != nil {
-		return 0, err
 	}
 
 	_sum := 0
@@ -28,7 +27,7 @@ func sum(filePath string) (int, error) {
 		_sum += int(b)
 	}
 
-	return _sum, nil
+    c <- _sum
 }
 
 // print the totalSum for all files and the files with equal sum
@@ -37,16 +36,15 @@ func main() {
 		fmt.Println("Usage: go run main.go <file1> <file2> ...")
 		return
 	}
+    c := make(chan int, 8)
+	for _, path := range os.Args[1:] {
+        go sum(path, c)
+    }
 
 	var totalSum int64
 	sums := make(map[int][]string)
 	for _, path := range os.Args[1:] {
-		_sum, err := sum(path)
-
-		if err != nil {
-			continue
-		}
-
+        _sum := <- c
 		totalSum += int64(_sum)
 
 		sums[_sum] = append(sums[_sum], path)

@@ -41,7 +41,7 @@ func main() {
 	var totalSum int64
 	sums := make(map[int][]string)
 	for _, path := range os.Args[1:] {
-		_sum, err := sum(path)
+		_sum, err := go sum(path)
 
 		if err != nil {
 			continue
@@ -54,9 +54,9 @@ func main() {
 
 	fmt.Println(totalSum)
 
-//	for sum, files := range sums {
-//		if len(files) > 1 {
-//			fmt.Printf("Sum %d: %v\n", sum, files)
-//		}
-//	}
+	for sum, files := range sums {
+		if len(files) > 1 {
+			fmt.Printf("Sum %d: %v\n", sum, files)
+		}
+	}
 }
